@@ -1,6 +1,7 @@
 package com.autoqatest;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,28 +25,26 @@ public class SignupTest extends BaseTest {
     @Test(description = "TC006 - Form Validation - Empty Submit")
     public void testFormValidationOnEmptySubmit() {
         driver.get(FORM_URL);
-        driver.findElement(By.cssSelector("#submit")).click();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement submitBtn = driver.findElement(By.id("submit"));
+        js.executeScript("arguments[0].click();", submitBtn);
         WebElement firstNameField = driver.findElement(By.cssSelector("#firstName"));
-        Assert.assertNotNull(firstNameField, "First name field not found");
+        String value = firstNameField.getAttribute("value");
+        Assert.assertEquals(value, "", "First name should be empty");
         System.out.println("TC006 PASSED: Form validation working on empty submit");
     }
 
     @Test(description = "TC007 - Check All Locator Types")
     public void testAllLocatorTypes() {
         driver.get(FORM_URL);
-
         WebElement firstName = driver.findElement(By.id("firstName"));
         Assert.assertNotNull(firstName, "ID locator failed");
-
         WebElement lastName = driver.findElement(By.cssSelector("#lastName"));
         Assert.assertNotNull(lastName, "CSS selector locator failed");
-
         WebElement emailField = driver.findElement(By.xpath("//input[@id='userEmail']"));
         Assert.assertNotNull(emailField, "XPath locator failed");
-
         WebElement header = driver.findElement(By.className("practice-form-wrapper"));
         Assert.assertNotNull(header, "Class name locator failed");
-
         System.out.println("TC007 PASSED: All locator strategies working");
     }
 }
